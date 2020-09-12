@@ -3,14 +3,14 @@ This is a mix of java and batch scripting that gets pertinent data from a user's
 It is set up to get and store a day-by-day count of views and clones that does not simply go away after 24 hours.  
 I'm not a superhero that can retrieve data that is more than 2 weeks old unless it has already been stored by the program, then it merely keeps going from the first time logging started.  
 
-## REQUIRED STEPS:  
+## Required Steps:  
 go into ViewsGetter.bat and in the quotes, add a username, and the password (see note at end)  
 in cmd, do "javac *.java" in the directory that the .java files are in to compile the java files  
 
-### OPTIONAL:  
+### Optional:  
 you can set up a task in task scheduler to run the bat file once a week (or more or less often, whatever) and you will not have to touch it ever, just watch as the data collects up.  
 
-## NOTE:  
+## Notes:  
 Github will be changing their api to no longer accept username+password.   
 This means you will need to create an API key for this in May 2021.  
 I do not know enough on the matter atm to fix it or anything so I will update this repo when I have more information.  
