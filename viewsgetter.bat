@@ -12,13 +12,14 @@ REM this gets all the data that has to do with the user's repos, but we dont rea
 curl "https://api.github.com/users/%user%/repos">%cd%\Repos.txt
 
 REM repo finder extracts the repo names so that we can do something with it
-java RepoRefiner
+javac -d out src/com/github/jojo2357/githubviewslogger/*.java
+java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.RepoRefiner
 
 REM for each repo, we get taffic, and then parse that data
 for /f "delims=" %%x in (Repos.txt) do (
 curl "https://api.github.com/repos/%user%/%%x/traffic/views" -u %user%:%password%>%cd%\%%x.txt
-java GitHubDataParser %%x Views
+java com.github.jojo2357.githubviewslogger.GitHubDataParser %%x Views
 curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u %user%:%password%>%cd%\%%x.txt
-java GitHubDataParser %%x Clones
+java com.github.jojo2357.githubviewslogger.GitHubDataParser %%x Clones
 )
 exit /b 0
