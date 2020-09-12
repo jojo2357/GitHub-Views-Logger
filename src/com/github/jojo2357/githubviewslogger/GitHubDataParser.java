@@ -1,4 +1,4 @@
-package com.github.jojo2357;
+package com.github.jojo2357.githubviewslogger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +12,11 @@ import java.util.Collections;
 import java.util.Scanner;
 
 public class GitHubDataParser {
+    /**
+     * parses the data and writes to the output file
+     *
+     * @param args the program arguments passed in
+     */
     public static void main(String[] args) {
         // first argument is project name, second is clones or views
         if (args.length < 2) {
@@ -63,17 +68,17 @@ public class GitHubDataParser {
                 nextLine = filePreserver.nextLine();
                 alreadyThere.append("\n").append(nextLine);
                 String[] holder = nextLine.split(",");
-                lastTimeStamp = new TimeStamp(holder[0], holder[1], holder[2]);// we will jsut keep overwriting until we
+                lastTimeStamp = new TimeStamp(holder[0], holder[1], holder[2]);// we will just keep overwriting until we
                 // stop and that will be the last time
                 // stamp
             }
             filePreserver.close();
         }
         ArrayList<TimeStamp> timestamps = new ArrayList<>();
-        do {// read every line that we got FROM GITHUB API (Efectively parsing it)
+        do {// read every line that we got FROM GITHUB API (Effectively parsing it)
             String lineIn = inputReader.nextLine();
             if (lineIn.contains("\"timestamp\"")) {// if it has ""timestamp":"
-                String views = inputReader.nextLine();// the format of the jsons say that the next line WILL be
+                String views = inputReader.nextLine();// the format of the JSONs say that the next line WILL be
                 // views/clones
                 String uniques = inputReader.nextLine();// and the line after that in unique clones/views
                 timestamps.add(new TimeStamp(lineIn, refine(views), refine(uniques)));// create timestamp and add to
@@ -112,13 +117,13 @@ public class GitHubDataParser {
     /**
      * refines the views/unique views lines since they all are the same format
      *
-     * @param in the views/unique views lines
+     * @param viewsLines the views/unique views lines
      * @return the refined views/unique views lines
      */
-    private static String refine(String in) {
-        String[] holder = in.split(":");
-        in = holder[1];
-        holder = in.split(",");
+    private static String refine(String viewsLines) {
+        String[] holder = viewsLines.split(":");
+        viewsLines = holder[1];
+        holder = viewsLines.split(",");
         return holder[0];
     }
 }

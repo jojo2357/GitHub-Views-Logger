@@ -1,10 +1,13 @@
-package com.github.jojo2357;
+package com.github.jojo2357.githubviewslogger;
 
+/**
+ * a timestamp which has day, month, and year fields
+ */
 public class TimeStamp implements Comparable<TimeStamp> {
     private String timeStamp;
-    public final int year;
-    public final int month;
-    public final int day;
+    private final int year;
+    private final int month;
+    private final int day;
     private String views;
     private String uniques;
 

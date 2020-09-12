@@ -1,4 +1,4 @@
-package com.github.jojo2357;
+package com.github.jojo2357.githubviewslogger;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,6 +7,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RepoRefiner {
+    /**
+     * writes to the repos file the repository names
+     *
+     * @param args the program args that are passed in
+     * @throws IOException when a problem with writing/reading from the repos file happens
+     */
     public static void main(String[] args) throws IOException {
         String userDirectory = System.getProperty("user.dir") + "\\";
         File mainFile = new File(userDirectory + "Repos.txt");
