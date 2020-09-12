@@ -1,1 +1,0 @@
-Just so that the folders show up in github, saves a lot of coding pain to have the folders premade and i didnt bother to make the code hyper robust, just robust enough

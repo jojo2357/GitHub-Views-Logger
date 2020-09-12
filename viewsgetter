@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# username
+USER="$1"
+
+# for now, this is the login password. However, a PAT may work, havent figured that out yet
+PASSWORD=""${@:2}""
+
+# dont change the directory unless you change the java programs too
+DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+cd $DIRECTORY
+
+# this gets all the data that has to do with the user's repos, but we dont really care
+curl "https://api.github.com/users/%user%/repos" >$PWD/Repos.txt
+
+# repo finder extracts the repo names so that we can do something with it
+javac -d out src/com/github/jojo2357/*.java
+java -cp $PWD/out/ com.github.jojo2357.RepoRefiner
+
+# for each repo, we get traffic, and then parse that data
+while read p; do
+  curl "https://api.github.com/repos/%user%/%%x/traffic/views" -u $USER:$PASSWORD >$PWD\$p.txt
+  java -cp $PWD/out/ com.github.jojo2357.GitHubDataParser $p Views
+  curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u $USER:$PASSWORD >$PWD\$p.txt
+  java -cp $PWD/out/ com.github.jojo2357.GitHubDataParser $p Clones
+done <repos.txt
