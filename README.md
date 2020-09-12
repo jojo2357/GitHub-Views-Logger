@@ -4,8 +4,14 @@ It is set up to get and store a day-by-day count of views and clones that does n
 I'm not a superhero that can retrieve data that is more than 2 weeks old unless it has already been stored by the program, then it merely keeps going from the first time logging started.  
 
 ## Required Steps:  
-go into ViewsGetter.bat and in the quotes, add a username, and the password (see note at end)  
-in cmd, do "javac *.java" in the directory that the .java files are in to compile the java files  
+### Windows:
+* go into ViewsGetter.bat and in the quotes, add a username, and the password (see note at end)  
+* run it  
+* profit  
+### Mac/Linux:
+* make `viewsgetter` executable using `chmod +x viewsgetter`  
+* run `viewsgetter` in the terminal (pass in your username and password, ex `./viewsgetter username verygOOdpA22word`)  
+* profit  
 
 ### Optional:  
 you can set up a task in task scheduler to run the bat file once a week (or more or less often, whatever) and you will not have to touch it ever, just watch as the data collects up.  
