@@ -12,10 +12,9 @@ public class GitHubDataParser {
     /**
      * parses the data and writes to the output file
      *
-     * @param args the program arguments passed in
+     * @param args the program arguments passed in {Repo name, Clone/Views, homedir}
      */
     public static void main(String[] args) {
-        // first argument is project name, second is clones or views
         if (args.length < 3) {
             throw new IllegalArgumentException("The project name and clones/views and calling dir is required!");
         }
@@ -23,8 +22,8 @@ public class GitHubDataParser {
         final String userDirectory = args[2];
         File inputFile = new File(userDirectory + args[0] + ".txt");
         File outputFile = new File(userDirectory + "ParsedData/" + args[1] + "/" + args[0] + ".csv");
-        StringBuilder alreadyThere = new StringBuilder();// Stores all of the data that is already in the file that we are working in
-        // just as a safeguard
+        StringBuilder alreadyThere = new StringBuilder();
+        // Stores all of the data that is already in the file that we are working in just as a safeguard
         TimeStamp lastTimeStamp = null;// Last time stamp in the file, dont put any data in before this date
 
         FileWriter outputWriter = null;
@@ -54,16 +53,15 @@ public class GitHubDataParser {
             } catch (FileNotFoundException exception) {
                 throw new RuntimeException("Error reading from stored data");
             }
-            String nextLine = filePreserver.nextLine(); // we need to read the first line since no matter what it will
-            // be "Date, Total, Unique
+            String nextLine = filePreserver.nextLine(); 
+            // we need to read the first line since no matter what it will be "Date, Total, Unique
             alreadyThere.append(nextLine);
             while (filePreserver.hasNextLine()) {
                 nextLine = filePreserver.nextLine();
                 alreadyThere.append("\n").append(nextLine);
                 String[] holder = nextLine.split(",");
                 lastTimeStamp = new TimeStamp(holder[0], holder[1], holder[2]);// we will just keep overwriting until we
-                // stop and that will be the last time
-                // stamp
+                // stop and that will be the last time stamp
             }
             filePreserver.close();
         }
@@ -99,7 +97,8 @@ public class GitHubDataParser {
             exception.printStackTrace();
         }
         try {
-            if (outputWriter != null) outputWriter.close();
+            if (outputWriter != null) 
+		outputWriter.close();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -109,6 +108,7 @@ public class GitHubDataParser {
 
     /**
      * refines the views/unique views lines since they all are the same format
+     * by refine, we just mean get rid of the part of the string that isn't useable
      *
      * @param viewsLines the views/unique views lines
      * @return the refined views/unique views lines

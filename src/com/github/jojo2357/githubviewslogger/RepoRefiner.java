@@ -8,15 +8,15 @@ import java.util.Scanner;
 
 public class RepoRefiner {
     /**
-     * writes to the repos file the repository names
+     * Takes the user's raw data from the api and extracts repo names
      *
-     * @param args the program args that are passed in
+     * @param args the program args that are passed in (not used)
      */
     public static void main(String[] args) {
         try {
             final String userDirectory = System.getProperty("user.dir") + "/";
             File mainFile = new File(userDirectory + "Repos.txt");
-            ArrayList<String> repoNames = new ArrayList<>();
+            ArrayList<String> repoNames = new ArrayList<String>();
             try (Scanner rawDataCollector = new Scanner(mainFile)) {
                 do {
                     String lineIn = rawDataCollector.nextLine();
