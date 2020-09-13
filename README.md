@@ -7,12 +7,12 @@ I'm not a superhero that can retrieve data that is more than 2 weeks old unless 
 ## Startup Guide:  
 * Install Java 8  
 ### Windows:
-* run `viewsgetter.bat` in the cmd using `viewsgetter`  
+* run `run_github_traffic_logger.bat` in the cmd using `run_github_traffic_logger`  
 * type in your username and password when asked    
 * profit  
 ### Mac/Linux:
-* make `viewsgetter` executable using `chmod +x viewsgetter`  
-* run `viewsgetter` in the terminal using `./viewsgetter`
+* make `run_github_traffic_logger` executable using `chmod +x run_github_traffic_logger`  
+* run `run_github_traffic_logger` in the terminal using `./run_github_traffic_logger`
 * type in your username and password when asked    
 * profit  
 

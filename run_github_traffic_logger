@@ -1,0 +1,47 @@
+#!/bin/bash
+
+function getAndParseData() {
+  # for each repo, we get traffic, and then parse that data
+  while read -r p; do
+    curl "https://api.github.com/repos/%user%/%%x/traffic/views" -u "$USER":"$PASSWORD" | tee -a "$PWD"\$p.txt logs/latest.log
+    java -cp "$PWD"/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser "$p" Views "$DIRECTORY" >>logs/latest.log
+    rm "$PWD"\$p.txt
+    curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u "$USER":"$PASSWORD" | tee -a "$PWD"\$p.txt logs/latest.log
+    java -cp "$PWD"/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser "$p" Clones "$DIRECTORY" >>logs/latest.log
+  done <Repos.txt
+}
+
+function createDirectories() {
+  mkdir -p "logs"
+  mkdir -p "out"
+  mkdir -p "ParsedData/Views"
+  mkdir -p "ParsedData/Clones"
+}
+
+function moveOldLog() {
+  if [ -f logs/latest.log ]; then
+    cp logs/latest.log "logs/$(date).log"
+    rm logs/latest.log
+  fi
+}
+
+# username
+read -rp "Enter username: " USER
+
+# for now, this is the login password. However, a PAT may work, havent figured that out yet
+read -rp "Enter password: " PASSWORD
+
+# dont change the directory unless you change the java programs too
+DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+cd "$DIRECTORY" || exit
+
+# this gets all the data that has to do with the user's repos, but we dont really care
+curl "https://api.github.com/users/%user%/repos" >"$PWD"/Repos.txt
+
+moveOldLog
+createDirectories
+# repo finder extracts the repo names so that we can do something with it
+javac -d out src/com/github/jojo2357/githubviewslogger/*.java
+java -cp "$PWD"/out/ com.github.jojo2357.githubviewslogger.RepoRefiner >>logs/latest.log
+getAndParseData
