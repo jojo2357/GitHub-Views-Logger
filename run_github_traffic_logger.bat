@@ -1,34 +1,86 @@
-set /p user=Enter username:
-set /p password=Enter password:
+if "%1"=="" set /p user=Enter username:
+if "%2"=="" set /p password=Enter password:
 
 set outputFile=latest.log
+set archiveFolder=logs
 
-echo Username used: %username%>%outputFile%
+echo Username used: %user%>%outputFile%
 echo Password used: %password%>>%outputFile%
 
-REM username>>%outputFile%
-REM for now, this is the login password. However, a PAT may work, havent figured that out yet>>%outputFile%
-
 REM dont change the directory unless you change the java programs too>>%outputFile%
-set directory=%~dp0>>%outputFile%
-Pushd %directory%>>%outputFile%
 
-REM this gets all the data that has to do with the user's repos, but we dont really care>>%outputFile%
-curl "https://api.github.com/users/%user%/repos">%cd%\Repos.txt>>%outputFile%
+CALL :SetToCorrectDir>>%outputFile%
 
-REM repo finder extracts the repo names so that we can do something with it>>%outputFile%
-if not exist "out" mkdir out>>%outputFile%
-if not exist "ParsedData" mkdir ParsedData>>%outputFile%
-if not exist "ParsedData\Views" mkdir ParsedData\Views>>%outputFile%
-if not exist "ParsedData\Clones" mkdir ParsedData\Clones>>%outputFile%
-javac -d out src\com\github\jojo2357\githubviewslogger\*.java>>%outputFile%
-java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.RepoRefiner>>%outputFile%
+if "%1"=="" set /p createTask=Would you like to create a task that runs me every sunday at 20:00 with the username: %user% and %password% ? (Y/N) 
 
-REM for each repo, we get taffic, and then parse that data>>%outputFile%
+if "%createTask%"=="Y" SCHTASKS /CREATE /SC WEEKLY /D SUN /TN "GitHub views logger" /TR "%cd%/run_github_traffic_logger.bat %user%, %password%" /ST 20:00
+
+CALL :AffirmFolders>>%outputFile%
+CALL :CompileJavaFiles>>%outputFile%
+CALL :GetAndParseRepos %user%>>%outputFile%
+CALL :GetAndSaveAllRepoData %user%, %password%>>%outputFile%
+CALL :ArchiveLastLog %outputFile%, %archiveFolder%
+
+EXIT /B %ERRORLEVEL% 
+
+:ArchiveLastLog
+MOVE %cd%\%~1 %cd%\%~2\
+CALL :GetTimestamp parsedTime
+copy "%cd%\%~2\%~1" "%cd%\%~2\%parsedTime%.log"
+EXIT /B 0
+
+:GetTimestamp
+set editedTime=%time%
+set editedTime=%editedTime:.=_%
+set editedTime=%editedTime::=;%
+FOR /F %%A IN ('WMIC OS GET LocalDateTime ^| FINDSTR \.') DO @SET B=%%A
+set %~1=%B:~0,4%-%B:~4,2%-%B:~6,2%,%editedTime%
+EXIT /B 0
+
+:SetToCorrectDir
+set directory=%~dp0
+Pushd %directory%
+EXIT /B 0
+
+:AffirmFolders
+if not exist "logs" mkdir logs
+if not exist "out" mkdir out
+if not exist "ParsedData" mkdir ParsedData
+if not exist "ParsedData\Views" mkdir ParsedData\Views
+if not exist "ParsedData\Clones" mkdir ParsedData\Clones
+EXIT /B 0
+
+:CompileJavaFiles
+javac -d out src\com\github\jojo2357\githubviewslogger\*.java
+EXIT /B 0
+
+:GetAndParseRepos
+CALL :GetRepos %~1
+CALL :ParseRepos
+EXIT /B 0
+
+:GetRepos
+curl "https://api.github.com/users/%~1/repos">%cd%\Repos.txt
+EXIT /B 0
+
+:ParseRepos
+java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.RepoRefiner
+EXIT /B 0
+
+REM 1 = user, 2 = password
+:GetAndSaveAllRepoData
 for /f "delims=" %%x in (Repos.txt) do (
-curl "https://api.github.com/repos/%user%/%%x/traffic/views" -u %user%:%password%>%cd%\%%x.txt>>%outputFile%
-java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %%x Views %directory%>>%outputFile%
-curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u %user%:%password%>%cd%\%%x.txt>>%outputFile%
-java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %%x Clones %directory%>>%outputFile%
+CALL :GetAndSaveRepoViews %%x, %~1, %~2
+CALL :GetAndSaveRepoClones %%x, %~1, %~2
 )
-exit /b 0
+EXIT /B 0
+
+:GetAndSaveRepoViews 
+curl "https://api.github.com/repos/%~2/%~1/traffic/views" -u %~2:%~3>%cd%\%~1.txt
+java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %~1 Views %cd%\
+EXIT /B 0
+
+:GetAndSaveRepoClones 
+curl "https://api.github.com/repos/%~2/%~1/traffic/clones" -u %~2:%~3>%cd%\%~1.txt
+java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %~1 Clones %cd%\
+EXIT /B 0
