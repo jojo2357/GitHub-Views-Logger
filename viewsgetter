@@ -16,6 +16,8 @@ curl "https://api.github.com/users/%user%/repos" >"$PWD"/Repos.txt
 
 # repo finder extracts the repo names so that we can do something with it
 mkdir -p "out"
+mkdir -p "ParsedData/Views"
+mkdir -p "ParsedData/Clones"
 javac -d out src/com/github/jojo2357/githubviewslogger/*.java
 java -cp "$PWD"/out/ com.github.jojo2357.githubviewslogger.RepoRefiner
 
