@@ -14,7 +14,7 @@ public class RepoRefiner {
      * @throws IOException when a problem with writing/reading from the repos file happens
      */
     public static void main(String[] args) throws IOException {
-        String userDirectory = System.getProperty("user.dir") + "\\";
+        String userDirectory = System.getProperty("user.dir") + "/";
         File mainFile = new File(userDirectory + "Repos.txt");
         ArrayList<String> repoNames = new ArrayList<>();
         try (Scanner rawDataCollector = new Scanner(mainFile)) {
