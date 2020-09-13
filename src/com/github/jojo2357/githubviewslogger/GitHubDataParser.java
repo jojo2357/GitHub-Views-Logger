@@ -18,13 +18,12 @@ public class GitHubDataParser {
         if (args.length < 3) {
             throw new IllegalArgumentException("The project name and clones/views and calling dir is required!");
         }
+        ArrayList<TimeStamp> timestamps = new ArrayList<>();
+        ArrayList<TimeStamp> alreadyFoundTimestamps = new ArrayList<>();
 
         final String userDirectory = args[2];
         File inputFile = new File(userDirectory + args[0] + ".txt");
         File outputFile = new File(userDirectory + "ParsedData/" + args[1] + "/" + args[0] + ".csv");
-        StringBuilder alreadyThere = new StringBuilder();
-        // Stores all of the data that is already in the file that we are working in just as a safeguard
-        TimeStamp lastTimeStamp = null;// Last time stamp in the file, dont put any data in before this date
 
         FileWriter outputWriter = null;
         Scanner inputReader;
@@ -55,43 +54,36 @@ public class GitHubDataParser {
             }
             String nextLine = filePreserver.nextLine(); 
             // we need to read the first line since no matter what it will be "Date, Total, Unique
-            alreadyThere.append(nextLine);
             while (filePreserver.hasNextLine()) {
                 nextLine = filePreserver.nextLine();
-                alreadyThere.append("\n").append(nextLine);
                 String[] holder = nextLine.split(",");
-                lastTimeStamp = new TimeStamp(holder[0], holder[1], holder[2]);// we will just keep overwriting until we
-                // stop and that will be the last time stamp
+		alreadyFoundTimestamps.add(new TimeStamp(holder[0], holder[1], holder[2]));
             }
             filePreserver.close();
         }
-        ArrayList<TimeStamp> timestamps = new ArrayList<>();
         while (inputReader.hasNextLine()) {// read every line that we got FROM GITHUB API (Effectively parsing it)
             String lineIn = inputReader.nextLine();
             if (lineIn.contains("\"timestamp\"")) {// if it has ""timestamp":"
-                String views = inputReader.nextLine();// the format of the JSONs say that the next line WILL be
-                // views/clones
+                String views = inputReader.nextLine();
+                // the format of the JSONs say that the next line WILL be views/clones
                 String uniques = inputReader.nextLine();// and the line after that in unique clones/views
-                timestamps.add(new TimeStamp(lineIn, refine(views), refine(uniques)));// create timestamp and add to
-                // list
+                timestamps.add(new TimeStamp(lineIn, refine(views), refine(uniques)));
+                // create timestamp and add to list
             }
         }
         Collections.sort(timestamps);// sort timestamps long ago > now
+	for (int foundIterator = alreadyFoundTimestamps.size() - 1; foundIterator >= 0; foundIterator--){
+	    if (alreadyFoundTimestamps.get(foundIterator).compareTo(timestamps.get(0)) < 0){
+		timestamps.add(alreadyFoundTimestamps.get(foundIterator));
+	    }
+	}
+	Collections.sort(timestamps);
         try {
             if (outputWriter == null)
                 outputWriter = new FileWriter(outputFile);
-            if (alreadyThere.length() > 0)
-                outputWriter.append(String.valueOf(alreadyThere)).append("\n");
-            if (lastTimeStamp == null) {
-                for (TimeStamp ts : timestamps) {
-                    outputWriter.append(ts.toString()).append("\n");
-                }
-            } else {
-                for (TimeStamp ts : timestamps) {
-                    if (ts.compareTo(lastTimeStamp) > 0) {
-                        outputWriter.append(ts.toString()).append("\n");
-                    }
-                }
+            outputWriter.append("Date, Total, Unique\n");
+            for (TimeStamp ts : timestamps) {
+                outputWriter.append(ts.toString()).append("\n");
             }
         } catch (IOException exception) {
             exception.printStackTrace();
