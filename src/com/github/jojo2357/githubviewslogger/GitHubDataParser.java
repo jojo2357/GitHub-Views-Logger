@@ -24,13 +24,6 @@ public class GitHubDataParser {
         }
 
         final String userDirectory = args[2];
-        try {
-	    System.out.println(userDirectory);
-            Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData\\")));
-	    Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData/" + args[1])));
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
         File inputFile = new File(userDirectory + args[0] + ".txt");
         File outputFile = new File(userDirectory + "ParsedData/" + args[1] + "/" + args[0] + ".csv");
         StringBuilder alreadyThere = new StringBuilder();// Stores all of the data that is already in the file that we are working in
@@ -53,6 +46,7 @@ public class GitHubDataParser {
                 outputWriter.write("Date, Total, Unique\n");
             } catch (IOException exception) {
                 inputReader.close();
+exception.printStackTrace();
                 throw new RuntimeException("Error making new output file");
             }
         } else {// now that it exists, we are going to take all of the data for safekeeping and

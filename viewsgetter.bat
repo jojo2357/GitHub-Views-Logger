@@ -13,6 +13,9 @@ curl "https://api.github.com/users/%user%/repos">%cd%\Repos.txt
 
 REM repo finder extracts the repo names so that we can do something with it
 if not exist "out" mkdir out
+if not exist "ParsedData" mkdir ParsedData
+if not exist "ParsedData\Views" mkdir ParsedData\Views
+if not exist "ParsedData\Clones" mkdir ParsedData\Clones
 javac -d out src\com\github\jojo2357\githubviewslogger\*.java
 java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.RepoRefiner
 
