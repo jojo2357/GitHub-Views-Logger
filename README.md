@@ -7,20 +7,23 @@ I'm not a superhero that can retrieve data that is more than 2 weeks old unless 
 ## Startup Guide:  
 * Install Java 8  
 ### Windows:
-* run `run_github_traffic_logger.bat` the way you would run any executeable
-* type in your username and password when asked    
+* run `run_windows_github_traffic_logger.bat` the way you would run any executeable
+* type in your username and password when asked
+* the program will ask if you want to set up a scheduled task that will run with your username and password every week on sunday at 20:00. type Y if you want that, N if you do not
 * profit  
 ### Mac/Linux:
-* make `run_github_traffic_logger` executable using `chmod +x run_github_traffic_logger`  
-* run `run_github_traffic_logger` in the terminal using `./run_github_traffic_logger`
+* make `run_mac-linux_github_traffic_logger` executable using `chmod +x run_mac-linux_github_traffic_logger`  
+* run `run_mac-linux_github_traffic_logger` in the terminal using `./run_mac-linux_github_traffic_logger`
 * type in your username and password when asked    
 * profit  
 
 ### Optional:  
 #### Windows:
-you can set up a task in task scheduler to run the bat file once a week (or more or less often, whatever) and you will not have to touch it ever, just watch as the data collects up.  
+you can set up a task in task scheduler to run the bat file once a week (or more or less often, whatever) and you will not have to touch it ever, just watch as the data collects up. The windows bat file now has the capability to create it for you! 
 
-if you choose to run `run_github_traffic_logger.bat` from the cmd, you can do `run_github_traffic_logger <username>, <password>` and you wont be prompted at all!
+If you dont see the prompt to set up a scheduled task and you are running the Windows bat file, try running it without passing in parameters. (this is a feature so that something like a scheduled task won't get asked for a bunch of stuff and can run without any user input).
+
+if you choose to run `run_windows_github_traffic_logger.bat` from cmd, you can do `run_windows_github_traffic_logger <username>, <password>` and you wont be prompted at all!
 
 ## Notes:  
 Github will be changing their api to no longer accept username+password.   
