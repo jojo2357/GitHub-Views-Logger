@@ -35,8 +35,8 @@ public class TimeStamp implements Comparable<TimeStamp> {
 
     @Override
     public String toString() {
-        return timeStamp + ", " +
-                + views + ", " +
+        return timeStamp + ", "
+                + views + ", "
                 + uniques;
     }
 
