@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -24,11 +21,6 @@ public class GitHubDataParser {
         }
 
         final String userDirectory = args[2];
-        try {
-            Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData/" + args[1])));
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
         File inputFile = new File(userDirectory + args[0] + ".txt");
         File outputFile = new File(userDirectory + "ParsedData/" + args[1] + "/" + args[0] + ".csv");
         StringBuilder alreadyThere = new StringBuilder();// Stores all of the data that is already in the file that we are working in
