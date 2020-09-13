@@ -1,28 +1,28 @@
 #!/bin/bash
 
 # username
-read -p "Enter username: " USER
+read -p -r "Enter username: " USER
 
 # for now, this is the login password. However, a PAT may work, havent figured that out yet
-read -p "Enter password: " PASSWORD
+read -p -r "Enter password: " PASSWORD
 
 # dont change the directory unless you change the java programs too
 DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-cd $DIRECTORY
+cd "$DIRECTORY" || exit
 
 # this gets all the data that has to do with the user's repos, but we dont really care
-curl "https://api.github.com/users/%user%/repos" >$PWD/Repos.txt
+curl "https://api.github.com/users/%user%/repos" >"$PWD"/Repos.txt
 
 # repo finder extracts the repo names so that we can do something with it
 mkdir -p "out"
 javac -d out src/com/github/jojo2357/githubviewslogger/*.java
-java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.RepoRefiner
+java -cp "$PWD"/out/ com.github.jojo2357.githubviewslogger.RepoRefiner
 
 # for each repo, we get traffic, and then parse that data
-while read p; do
-  curl "https://api.github.com/repos/%user%/%%x/traffic/views" -u $USER:$PASSWORD >$PWD\$p.txt
-  java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser $p Views $DIRECTORY
-  curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u $USER:$PASSWORD >$PWD\$p.txt
-  java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser $p Clones $DIRECTORY
+while read -r p; do
+  curl "https://api.github.com/repos/%user%/%%x/traffic/views" -u "$USER":"$PASSWORD" >"$PWD"\$p.txt
+  java -cp "$PWD"/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser "$p" Views "$DIRECTORY"
+  curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u "$USER":"$PASSWORD" >"$PWD"\$p.txt
+  java -cp "$PWD"/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser "$p" Clones "$DIRECTORY"
 done <Repos.txt
