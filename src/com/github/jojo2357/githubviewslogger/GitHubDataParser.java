@@ -25,9 +25,7 @@ public class GitHubDataParser {
 
         final String userDirectory = args[2];
         try {
-	    System.out.println(userDirectory);
-            Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData\\")));
-	    Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData/" + args[1])));
+            Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData/" + args[1])));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
