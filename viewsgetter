@@ -22,7 +22,7 @@ java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.RepoRefiner
 # for each repo, we get traffic, and then parse that data
 while read p; do
   curl "https://api.github.com/repos/%user%/%%x/traffic/views" -u $USER:$PASSWORD >$PWD\$p.txt
-  java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser $p Views
+  java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser $p Views $DIRECTORY
   curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u $USER:$PASSWORD >$PWD\$p.txt
-  java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser $p Clones
+  java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser $p Clones $DIRECTORY
 done <Repos.txt
