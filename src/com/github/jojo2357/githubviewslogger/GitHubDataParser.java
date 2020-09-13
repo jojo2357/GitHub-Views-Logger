@@ -43,7 +43,7 @@ public class GitHubDataParser {
                 outputWriter.write("Date, Total, Unique\n");
             } catch (IOException exception) {
                 inputReader.close();
-		exception.printStackTrace();
+                exception.printStackTrace();
                 throw new RuntimeException("Error making new output file");
             }
         } else {// now that it exists, we are going to take all of the data for safekeeping and
@@ -77,7 +77,7 @@ public class GitHubDataParser {
                 timestamps.add(new TimeStamp(lineIn, refine(views), refine(uniques)));// create timestamp and add to
                 // list
             }
-        } 
+        }
         Collections.sort(timestamps);// sort timestamps long ago > now
         try {
             if (outputWriter == null)
