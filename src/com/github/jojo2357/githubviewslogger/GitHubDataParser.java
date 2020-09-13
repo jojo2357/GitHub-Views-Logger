@@ -53,7 +53,7 @@ public class GitHubDataParser {
                 throw new RuntimeException("Error reading from stored data");
             }
             String nextLine = filePreserver.nextLine(); 
-            // we need to read the first line since no matter what it will be "Date, Total, Unique
+            // we need to ignore the first line since no matter what it will be "Date, Total, Unique"
             while (filePreserver.hasNextLine()) {
                 nextLine = filePreserver.nextLine();
                 String[] holder = nextLine.split(",");
@@ -68,12 +68,11 @@ public class GitHubDataParser {
                 // the format of the JSONs say that the next line WILL be views/clones
                 String uniques = inputReader.nextLine();// and the line after that in unique clones/views
                 timestamps.add(new TimeStamp(lineIn, refine(views), refine(uniques)));
-                // create timestamp and add to list
             }
         }
-        Collections.sort(timestamps);// sort timestamps long ago > now
+        Collections.sort(timestamps);// sort timestamps long ago -> now
 	for (int foundIterator = alreadyFoundTimestamps.size() - 1; foundIterator >= 0; foundIterator--){
-	    if (alreadyFoundTimestamps.get(foundIterator).compareTo(timestamps.get(0)) < 0){
+	    if (alreadyFoundTimestamps.get(foundIterator).compareTo(timestamps.get(0)) < 0){//if the timestap that we pulled from the file is from before the oldest new timestamp, we must add it to the list for reprinting
 		timestamps.add(alreadyFoundTimestamps.get(foundIterator));
 	    }
 	}
@@ -89,13 +88,12 @@ public class GitHubDataParser {
             exception.printStackTrace();
         }
         try {
-            if (outputWriter != null) 
-		outputWriter.close();
+            outputWriter.close();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
         inputReader.close();
-        System.out.println(inputFile.delete());
+        inputFile.delete();
     }
 
     /**

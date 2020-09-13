@@ -1,10 +1,10 @@
 package com.github.jojo2357.githubviewslogger;
 
 /**
- * a timestamp which has day, month, and year fields
+ * a timestamp object which has day, month, and year fields
  */
 public class TimeStamp implements Comparable<TimeStamp> {
-    private String timeStamp;
+    private String timeStamp;// the un-parsed timestamp. not used for anything but debugging
     private final int year;
     private final int month;
     private final int day;
@@ -27,6 +27,9 @@ public class TimeStamp implements Comparable<TimeStamp> {
         day = Integer.parseInt(holder[2]);
     }
 
+    /*
+    * @param String containing the time stamp, views/clones, unique viewers
+    */
     public TimeStamp(String timeStamp, String views, String uniques) {
         this(timeStamp);
         this.views = views;
@@ -38,6 +41,7 @@ public class TimeStamp implements Comparable<TimeStamp> {
         return timeStamp + ", " + views + ", " + uniques;
     }
 
+    // in a.compareTo(b), 1 means a came after b, 0 means they are the same day
     @Override
     public int compareTo(TimeStamp timeStamp) {
         if (this.year > timeStamp.year) return 1;
