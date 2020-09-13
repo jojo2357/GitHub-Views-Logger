@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # username
-read -p -r "Enter username: " USER
+read -rp "Enter username: " USER
 
 # for now, this is the login password. However, a PAT may work, havent figured that out yet
-read -p -r "Enter password: " PASSWORD
+read -rp "Enter password: " PASSWORD
 
 # dont change the directory unless you change the java programs too
 DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
