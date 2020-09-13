@@ -19,18 +19,20 @@ public class GitHubDataParser {
      */
     public static void main(String[] args) {
         // first argument is project name, second is clones or views
-        if (args.length < 2) {
-            throw new IllegalArgumentException("The project name and clones/views is required!");
+        if (args.length < 3) {
+            throw new IllegalArgumentException("The project name and clones/views and calling dir is required!");
         }
 
-        final String userDirectory = System.getProperty("user.home") + "/";
-        File inputFile = new File(userDirectory + args[0] + ".txt");
-        File outputFile = new File(userDirectory + "ParsedData/" + args[1] + "/" + args[0] + ".csv");
+        final String userDirectory = args[2];
         try {
-            Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData/" + args[1])));
+	    System.out.println(userDirectory);
+            Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData\\")));
+	    Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData/" + args[1])));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+        File inputFile = new File(userDirectory + args[0] + ".txt");
+        File outputFile = new File(userDirectory + "ParsedData/" + args[1] + "/" + args[0] + ".csv");
         StringBuilder alreadyThere = new StringBuilder();// Stores all of the data that is already in the file that we are working in
         // just as a safeguard
         TimeStamp lastTimeStamp = null;// Last time stamp in the file, dont put any data in before this date
@@ -40,7 +42,7 @@ public class GitHubDataParser {
         try {
             inputReader = new Scanner(inputFile);
         } catch (FileNotFoundException exception) {
-            throw new RuntimeException("No such file with tne path " + inputFile.getAbsolutePath() + " exists!");
+            throw new RuntimeException("No such file with the path " + inputFile.getAbsolutePath() + " exists!");
         }
 
         if (!outputFile.exists()) {
