@@ -19,8 +19,8 @@ java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.RepoRefiner
 REM for each repo, we get taffic, and then parse that data
 for /f "delims=" %%x in (Repos.txt) do (
 curl "https://api.github.com/repos/%user%/%%x/traffic/views" -u %user%:%password%>%cd%\%%x.txt
-java com.github.jojo2357.githubviewslogger.GitHubDataParser %%x Views
+java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %%x Views
 curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u %user%:%password%>%cd%\%%x.txt
-java com.github.jojo2357.githubviewslogger.GitHubDataParser %%x Clones
+java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %%x Clones
 )
 exit /b 0
