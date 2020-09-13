@@ -14,7 +14,7 @@ public class RepoRefiner {
      */
     public static void main(String[] args) {
         try {
-            String userDirectory = System.getProperty("user.dir") + "/";
+            final String userDirectory = System.getProperty("user.home") + "/";
             File mainFile = new File(userDirectory + "Repos.txt");
             ArrayList<String> repoNames = new ArrayList<>();
             try (Scanner rawDataCollector = new Scanner(mainFile)) {

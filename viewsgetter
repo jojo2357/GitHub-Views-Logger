@@ -25,4 +25,4 @@ while read p; do
   java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser $p Views
   curl "https://api.github.com/repos/%user%/%%x/traffic/clones" -u $USER:$PASSWORD >$PWD\$p.txt
   java -cp $PWD/out/ com.github.jojo2357.githubviewslogger.GitHubDataParser $p Clones
-done <repos.txt
+done <Repos.txt
