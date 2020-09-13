@@ -7,12 +7,13 @@ I'm not a superhero that can retrieve data that is more than 2 weeks old unless 
 ## Required Steps:  
 * Install Java 8  
 ### Windows:
-* go into ViewsGetter.bat and in the quotes, add a username, and the password (see note at end)  
-* run it  
+* run `viewsgetter.bat` in the cmd using `viewsgetter`  
+* type in your username and password when asked    
 * profit  
 ### Mac/Linux:
 * make `viewsgetter` executable using `chmod +x viewsgetter`  
-* run `viewsgetter` in the terminal (pass in your username and password, ex `./viewsgetter username verygOOdpA22word`)  
+* run `viewsgetter` in the terminal using `./viewsgetter`
+* type in your username and password when asked    
 * profit  
 
 ### Optional:  

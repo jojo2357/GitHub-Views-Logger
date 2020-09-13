@@ -1,8 +1,8 @@
 REM username
-set user=""
+set /p user=Enter username:
 
 REM for now, this is the login password. However, a PAT may work, havent figured that out yet
-set password=""
+set /p password=Enter password:
 
 REM dont change the directory unless you change the java programs too
 set directory=%~dp0
