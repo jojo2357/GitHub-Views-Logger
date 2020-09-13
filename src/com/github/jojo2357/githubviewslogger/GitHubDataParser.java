@@ -23,11 +23,11 @@ public class GitHubDataParser {
             throw new IllegalArgumentException("The project name and clones/views is required!");
         }
 
-        final String userDirectory = System.getProperty("user.dir") + "\\";
+        final String userDirectory = System.getProperty("user.dir") + "/";
         File inputFile = new File(userDirectory + args[0] + ".txt");
-        File outputFile = new File(userDirectory + "ParsedData\\" + args[1] + "\\" + args[0] + ".csv");
+        File outputFile = new File(userDirectory + "ParsedData/" + args[1] + "/" + args[0] + ".csv");
         try {
-            Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData\\" + args[1])));
+            Files.createDirectories(Paths.get(URI.create(userDirectory + "ParsedData/" + args[1])));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
