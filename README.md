@@ -20,7 +20,7 @@ I'm not a superhero that can retrieve data that is more than 2 weeks old unless 
 #### Windows:
 you can set up a task in task scheduler to run the bat file once a week (or more or less often, whatever) and you will not have to touch it ever, just watch as the data collects up.  
 
-if you choose to run `run_github_traffic_logger.bat` from the cmd, you can do run_github_traffic_logger <username>, <password> and you wont be prompted at all!
+if you choose to run `run_github_traffic_logger.bat` from the cmd, you can do `run_github_traffic_logger <username>, <password>` and you wont be prompted at all!
 
 ## Notes:  
 Github will be changing their api to no longer accept username+password.   
