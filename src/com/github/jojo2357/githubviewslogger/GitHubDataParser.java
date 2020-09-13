@@ -43,6 +43,7 @@ public class GitHubDataParser {
                 outputWriter.write("Date, Total, Unique\n");
             } catch (IOException exception) {
                 inputReader.close();
+		exception.printStackTrace();
                 throw new RuntimeException("Error making new output file");
             }
         } else {// now that it exists, we are going to take all of the data for safekeeping and
@@ -67,7 +68,7 @@ public class GitHubDataParser {
             filePreserver.close();
         }
         ArrayList<TimeStamp> timestamps = new ArrayList<>();
-        do {// read every line that we got FROM GITHUB API (Effectively parsing it)
+        while (inputReader.hasNextLine()) {// read every line that we got FROM GITHUB API (Effectively parsing it)
             String lineIn = inputReader.nextLine();
             if (lineIn.contains("\"timestamp\"")) {// if it has ""timestamp":"
                 String views = inputReader.nextLine();// the format of the JSONs say that the next line WILL be
@@ -76,7 +77,7 @@ public class GitHubDataParser {
                 timestamps.add(new TimeStamp(lineIn, refine(views), refine(uniques)));// create timestamp and add to
                 // list
             }
-        } while (inputReader.hasNextLine());
+        } 
         Collections.sort(timestamps);// sort timestamps long ago > now
         try {
             if (outputWriter == null)
