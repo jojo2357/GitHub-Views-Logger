@@ -58,70 +58,70 @@ DO
 LOOP UNTIL EOF(1)
 CLOSE #1
 
-handle& = _NEWIMAGE(1366, 768, 256)
+handle& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 256)
 SCREEN handle& 'creates the screen and moves it to top left corner of the desktop so that a screenshot can be taken
 _SCREENMOVE 0, 0
 
 zeroDay = timestamps(1).date
 finalDay = timestamps(timestampCounter).date
 
-LOCATE 3, (1366 / 16) - LEN(RTRIM$(LTRIM$(args(1) + " of " + args(2) + " between " + dayOne$ + " and " + mostRecent$))) / 2
+LOCATE 3, (_WIDTH / 16) - LEN(RTRIM$(LTRIM$(args(1) + " of " + args(2) + " between " + dayOne$ + " and " + mostRecent$))) / 2
 PRINT args(1); " of "; args(2); " between "; dayOne$; " and "; mostRecent$ 'Title
-LOCATE 4, ((1366 / 16) - (LEN("On the left are " + args(1) + " represented in green and on the right are unique " + args(1) + " represented in blue")) / 2)
+LOCATE 4, ((_WIDTH / 16) - (LEN("On the left are " + args(1) + " represented in green and on the right are unique " + args(1) + " represented in blue")) / 2)
 PRINT "On the left are "; args(1); " represented in green and on the right are unique "; args(1); " represented in blue" 'Axis labels
 
-LINE (83, 650)-(1283, 100), _RGB(54, 57, 63), BF
+LINE (83, _HEIGHT - 200)-(_WIDTH - 83, 100), _RGB(54, 57, 63), BF
 FOR verticalLineDrawer = 1 TO finalDay - zeroDay - 1
-  LINE (83 + (1200 * (verticalLineDrawer) / (finalDay - zeroDay)), 649)-(83 + (1200 * (verticalLineDrawer) / (finalDay - zeroDay)), 101), _RGB(32, 34, 37) 'Vertical lines at each date
+  LINE (83 + ((_WIDTH - 2 * 83) * (verticalLineDrawer) / (finalDay - zeroDay)), _HEIGHT - 201)-(83 + ((_WIDTH - 2 * 83) * (verticalLineDrawer) / (finalDay - zeroDay)), 101), _RGB(32, 34, 37) 'Vertical lines at each date
 NEXT
 
 FOR tabs = 1 TO 3 'Numberic axis labels
-  LOCATE (650 - (550 * tabs / 3)) / 16, 50 / 8
+  LOCATE (_HEIGHT - 200 - ((_HEIGHT - 300) * tabs / 3)) / 16, 50 / 8
   IF (INT(tabs * mostViews / 3) > 0 AND INT(tabs * mostViews / 3) > INT((mostViews * (tabs - 1)) / 3)) OR tabs = 3 THEN
     PRINT INT(tabs * mostViews / 3)
   END IF
-  LINE (83, (650 - (550 * tabs / 3)))-(1283, (650 - 550 * tabs / 3)), _RGB(32, 34, 37)
-  LOCATE (650 - 550 * tabs / 3) / 16, 1300 / 8
+  LINE (83, (_HEIGHT - 200 - ((_HEIGHT - 300) * tabs / 3)))-(_WIDTH - 83, (_HEIGHT - 200 - (_HEIGHT - 300) * tabs / 3)), _RGB(32, 34, 37)
+  LOCATE (_HEIGHT - 200 - (_HEIGHT - 300) * tabs / 3) / 16, (_WIDTH - 75) / 8
   IF (INT(tabs * mostUniques / 3) > 0 AND INT(tabs * mostUniques / 3) > INT((mostUniques * (tabs - 1)) / 3)) OR tabs = 3 THEN
     PRINT INT(tabs * mostUniques / 3)
   END IF
 NEXT
 
-LINE (83, 650 - 550 * (timestamps(1).views / mostViews))-(83, 650 - 550 * (timestamps(1).views / mostViews))
+LINE (83, _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(1).views / mostViews))-(83, _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(1).views / mostViews))
 FOR chartMaker = 1 TO timestampCounter 'Plot view lines
   IF chartMaker > 1 THEN
     IF timestamps(chartMaker - 1).date <> timestamps(chartMaker).date - 1 THEN
-      LINE -(83 + (1200 * (timestamps(chartMaker).date - 1 - zeroDay) / (finalDay - zeroDay)), 649), _RGB(0, 175, 0)
+      LINE -(83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - 1 - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 201), _RGB(0, 175, 0)
     END IF
   END IF
-  LINE -(83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).views / mostViews)), _RGB(0, 175, 0)
+  LINE -(83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).views / mostViews)), _RGB(0, 175, 0)
   IF chartMaker < timestampCounter THEN
     IF timestamps(chartMaker + 1).date <> timestamps(chartMaker).date + 1 THEN
-      LINE -(83 + (1200 * (timestamps(chartMaker).date + 1 - zeroDay) / (finalDay - zeroDay)), 649), _RGB(0, 175, 0)
+      LINE -(83 + ((_WIDTH - 166) * (timestamps(chartMaker).date + 1 - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 201), _RGB(0, 175, 0)
     END IF
   END IF
 NEXT
 
-LINE (83, 650 - 550 * (timestamps(1).uniques / mostUniques))-(83, 650 - 550 * (timestamps(1).uniques / mostUniques))
+LINE (83, _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(1).uniques / mostUniques))-(83, _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(1).uniques / mostUniques))
 FOR chartMaker = 1 TO timestampCounter 'Plot unique lines
   IF chartMaker > 1 THEN
     IF timestamps(chartMaker - 1).date <> timestamps(chartMaker).date - 1 THEN
-      LINE -(83 + (1200 * (timestamps(chartMaker).date - 1 - zeroDay) / (finalDay - zeroDay)), 649), _RGB(0, 0, 175)
+      LINE -(83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - 1 - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 201), _RGB(0, 0, 175)
     END IF
   END IF
-  LINE -(83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).uniques / mostUniques)), _RGB(0, 0, 175)
+  LINE -(83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).uniques / mostUniques)), _RGB(0, 0, 175)
   IF chartMaker < timestampCounter THEN
     IF timestamps(chartMaker + 1).date <> timestamps(chartMaker).date + 1 THEN
-      LINE -(83 + (1200 * (timestamps(chartMaker).date + 1 - zeroDay) / (finalDay - zeroDay)), 649), _RGB(0, 0, 175)
+      LINE -(83 + ((_WIDTH - 166) * (timestamps(chartMaker).date + 1 - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 201), _RGB(0, 0, 175)
     END IF
   END IF
 NEXT
 
 FOR chartMaker = 1 TO timestampCounter 'Plot points
-  CIRCLE (83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).views / mostViews)), 5, _RGB(0, 225, 0)
-  PAINT (83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).views / mostViews)), _RGB(0, 225, 0)
-  CIRCLE (83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).uniques / mostUniques)), 5, _RGB(0, 0, 225)
-  PAINT (83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).uniques / mostUniques)), _RGB(0, 0, 225)
+  CIRCLE (83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).views / mostViews)), 5, _RGB(0, 225, 0)
+  PAINT (83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).views / mostViews)), _RGB(0, 225, 0)
+  CIRCLE (83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).uniques / mostUniques)), 5, _RGB(0, 0, 225)
+  PAINT (83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).uniques / mostUniques)), _RGB(0, 0, 225)
 NEXT
 _DISPLAY
 _DELAY (1) 'wait for display to catch up
