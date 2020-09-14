@@ -30,6 +30,8 @@ If you don't see the prompt to set up a scheduled task and you are running the W
 
 if you choose to run `run_windows_github_traffic_logger.bat` from cmd, you can do `run_windows_github_traffic_logger <username>, <password>` and you wont be prompted at all!
 
+if you want to create charts from the data that has built up, all you have to do is run `create_charts.bat` and enter your username (enter username just to make sure that Repos.txt is correct)
+
 ## Notes:  
 Github will be changing their api to no longer accept username+password.   
 This means you will need to create an API key for this in May 2021.  
