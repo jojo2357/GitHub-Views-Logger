@@ -91,7 +91,6 @@ EXIT /B 0
 
 :CreateCharts
 for /f "delims=" %%x in (Repos.txt) do (
-ChartMaker Views %%x
-ChartMaker Clones %%x
+create_charts %%x
 )
 EXIT /B 0

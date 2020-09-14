@@ -5,7 +5,9 @@
 '.jpg not supported to my awareness, but if it is a problem,
 'open it in pictures and take a screenshot :)
 
-'TODO: optimize for any given desktop size
+handle& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 256)
+SCREEN handle& 'creates the screen and moves it to top left corner of the desktop so that a screenshot can be taken
+_SCREENMOVE 0, 0
 
 _TITLE "ChartMaker" 'Names the window. How cute!
 
@@ -15,7 +17,7 @@ TYPE timeStamp
   uniques AS _UNSIGNED LONG
 END TYPE
 
-REM parameter 1 = views/commits, 2 = name
+REM parameter 1 = views/clones, 2 = name
 commandUsed$ = RTRIM$(LTRIM$(COMMAND$))
 
 DIM args(1 TO 2) AS STRING
@@ -57,10 +59,6 @@ DO
   END IF
 LOOP UNTIL EOF(1)
 CLOSE #1
-
-handle& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 256)
-SCREEN handle& 'creates the screen and moves it to top left corner of the desktop so that a screenshot can be taken
-_SCREENMOVE 0, 0
 
 zeroDay = timestamps(1).date
 finalDay = timestamps(timestampCounter).date
@@ -123,8 +121,9 @@ FOR chartMaker = 1 TO timestampCounter 'Plot points
   CIRCLE (83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).uniques / mostUniques)), 5, _RGB(0, 0, 225)
   PAINT (83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).uniques / mostUniques)), _RGB(0, 0, 225)
 NEXT
-_DISPLAY
-_DELAY (1) 'wait for display to catch up
+'_DISPLAY
+'_DELAY (1) 'wait for display to catch up
+WAIT &H3DA, 8
 saveDir$ = _CWD$ + "\Charts\" + args(1) + "\" + args(2)
 chart& = _SCREENIMAGE 'take screenshot
 SaveImage chart&, saveDir$ 'save screenshot

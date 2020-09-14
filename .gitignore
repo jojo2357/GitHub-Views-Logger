@@ -18,6 +18,8 @@ databases
 secrets
 
 # misc
+Charts
 logs
+*.log
 Repos.txt
 ParsedData/
