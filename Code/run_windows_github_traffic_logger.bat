@@ -1,6 +1,6 @@
 if "%1"=="" set /p user=Enter username:
 if "%2"=="" set /p password=Enter password:
-if "%1"=="" set /p generateCharts=Would you like to create charts as well? (Y/N):
+if exist ChartMaker.exe if "%1"=="" set /p generateCharts=Would you like to create charts as well? (Y/N):
 
 set outputFile=latest.log
 set archiveFolder=logs
