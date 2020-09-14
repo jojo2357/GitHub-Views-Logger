@@ -35,6 +35,7 @@ public class TimeStamp implements Comparable<TimeStamp> {
     public TimeStamp(String timeStamp, String views, String uniques) {
         this(timeStamp);
 	if (!timeStamp.contains(":")){
+            this.timeStamp = timeStamp;
             String[] holder = timeStamp.split("-");
             year = Integer.parseInt(holder[0]);
             month = Integer.parseInt(holder[1]);

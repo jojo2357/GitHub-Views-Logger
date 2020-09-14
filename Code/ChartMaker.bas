@@ -5,10 +5,6 @@
 '.jpg not supported to my awareness, but if it is a problem,
 'open it in pictures and take a screenshot :)
 
-handle& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 256)
-SCREEN handle& 'creates the screen and moves it to top left corner of the desktop so that a screenshot can be taken
-_SCREENMOVE 0, 0
-
 _TITLE "ChartMaker" 'Names the window. How cute!
 
 TYPE timeStamp
@@ -27,6 +23,9 @@ args(2) = LTRIM$(RTRIM$(RIGHT$(commandUsed$, LEN(commandUsed$) - LEN(args(1)))))
 OPEN _CWD$ + "\ParsedData\" + args(1) + "\" + args(2) + ".csv" FOR INPUT AS #1 'Raw data file
 LINE INPUT #1, ignoreFirstRead$
 IF EOF(1) THEN SYSTEM 'quits if there is only one line
+handle& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 256)   'We want to do this asap, and this is asap
+SCREEN handle& 'creates the screen and moves it to top left corner of the desktop so that a screenshot can be taken
+_SCREENMOVE 0, 0
 DO
   lines = lines + 1 'counts the lines
   LINE INPUT #1, ignoreFirstRead$
