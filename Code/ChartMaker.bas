@@ -7,9 +7,7 @@
 
 'TODO: optimize for any given desktop size
 
-_TITLE "ChartMaker"
-
-'$SCREENHIDE
+_TITLE "ChartMaker" 'Names the window. How cute!
 
 TYPE timeStamp
   date AS _UNSIGNED INTEGER '0 = 2020/01/01
@@ -21,23 +19,19 @@ REM parameter 1 = views/commits, 2 = name
 commandUsed$ = RTRIM$(LTRIM$(COMMAND$))
 
 DIM args(1 TO 2) AS STRING
-args(1) = LTRIM$(RTRIM$(LEFT$(commandUsed$, INSTR(commandUsed$, " "))))
-args(2) = LTRIM$(RTRIM$(RIGHT$(commandUsed$, LEN(commandUsed$) - LEN(args(1)))))
+args(1) = LTRIM$(RTRIM$(LEFT$(commandUsed$, INSTR(commandUsed$, " ")))) 'Clones/Views
+args(2) = LTRIM$(RTRIM$(RIGHT$(commandUsed$, LEN(commandUsed$) - LEN(args(1))))) 'Repo name
 
-PRINT COMMAND$, args(1), args(2)
-PRINT _CWD$ + "\ParsedData\" + args(1) + "\" + args(2) + ".csv"
-
-OPEN _CWD$ + "\ParsedData\" + args(1) + "\" + args(2) + ".csv" FOR INPUT AS #1
+OPEN _CWD$ + "\ParsedData\" + args(1) + "\" + args(2) + ".csv" FOR INPUT AS #1 'Raw data file
 LINE INPUT #1, ignoreFirstRead$
-IF EOF(1) THEN SYSTEM
+IF EOF(1) THEN SYSTEM 'quits if there is only one line
 DO
-  lines = lines + 1
+  lines = lines + 1 'counts the lines
   LINE INPUT #1, ignoreFirstRead$
 LOOP UNTIL EOF(1)
 CLOSE #1
 
-DIM timestamps(1 TO lines) AS timeStamp
-
+DIM timestamps(1 TO lines) AS timeStamp 'Has to count first because it's faster and easier than using dynamic arrays
 OPEN _CWD$ + "\ParsedData\" + args(1) + "\" + args(2) + ".csv" FOR INPUT AS #1
 LINE INPUT #1, ignoreFirstRead$
 IF EOF(1) THEN END
@@ -50,40 +44,38 @@ DO
   IF timestampCounter = lines THEN
     mostRecent$ = LEFT$(lineIn$, INSTR(lineIn$, ",") - 1)
   END IF
-  timestamps(timestampCounter).date = extractDateNumber(LEFT$(lineIn$, INSTR(lineIn$, ",") - 1))
+  timestamps(timestampCounter).date = extractDateNumber(LEFT$(lineIn$, INSTR(lineIn$, ",") - 1)) 'Data parsing, just believe that it works or go on the qb64 wiki
   lineIn$ = RIGHT$(lineIn$, LEN(lineIn$) - INSTR(lineIn$, ","))
   timestamps(timestampCounter).views = VAL(LEFT$(lineIn$, INSTR(lineIn$, ",")))
   lineIn$ = RIGHT$(lineIn$, LEN(lineIn$) - INSTR(lineIn$, ","))
   timestamps(timestampCounter).uniques = VAL(lineIn$)
-
-  IF timestamps(timestampCounter).views > mostViews THEN
+  IF timestamps(timestampCounter).views > mostViews THEN 'Keeps track of record # of views and uniques for use in scaling the chart
     mostViews = timestamps(timestampCounter).views
   END IF
   IF timestamps(timestampCounter).uniques > mostUniques THEN
     mostUniques = timestamps(timestampCounter).uniques
   END IF
-
 LOOP UNTIL EOF(1)
 CLOSE #1
 
 handle& = _NEWIMAGE(1366, 768, 256)
-SCREEN handle&
+SCREEN handle& 'creates the screen and moves it to top left corner of the desktop so that a screenshot can be taken
 _SCREENMOVE 0, 0
 
 zeroDay = timestamps(1).date
 finalDay = timestamps(timestampCounter).date
 
 LOCATE 3, (1366 / 16) - LEN(RTRIM$(LTRIM$(args(1) + " of " + args(2) + " between " + dayOne$ + " and " + mostRecent$))) / 2
-PRINT args(1); " of "; args(2); " between "; dayOne$; " and "; mostRecent$
+PRINT args(1); " of "; args(2); " between "; dayOne$; " and "; mostRecent$ 'Title
 LOCATE 4, ((1366 / 16) - (LEN("On the left are " + args(1) + " represented in green and on the right are unique " + args(1) + " represented in blue")) / 2)
-PRINT "On the left are "; args(1); " represented in green and on the right are unique "; args(1); " represented in blue"
+PRINT "On the left are "; args(1); " represented in green and on the right are unique "; args(1); " represented in blue" 'Axis labels
 
 LINE (83, 650)-(1283, 100), _RGB(54, 57, 63), BF
 FOR verticalLineDrawer = 1 TO finalDay - zeroDay - 1
-  LINE (83 + (1200 * (verticalLineDrawer) / (finalDay - zeroDay)), 649)-(83 + (1200 * (verticalLineDrawer) / (finalDay - zeroDay)), 101), _RGB(32, 34, 37)
+  LINE (83 + (1200 * (verticalLineDrawer) / (finalDay - zeroDay)), 649)-(83 + (1200 * (verticalLineDrawer) / (finalDay - zeroDay)), 101), _RGB(32, 34, 37) 'Vertical lines at each date
 NEXT
 
-FOR tabs = 1 TO 3
+FOR tabs = 1 TO 3 'Numberic axis labels
   LOCATE (650 - (550 * tabs / 3)) / 16, 50 / 8
   IF (INT(tabs * mostViews / 3) > 0 AND INT(tabs * mostViews / 3) > INT((mostViews * (tabs - 1)) / 3)) OR tabs = 3 THEN
     PRINT INT(tabs * mostViews / 3)
@@ -95,9 +87,8 @@ FOR tabs = 1 TO 3
   END IF
 NEXT
 
-
 LINE (83, 650 - 550 * (timestamps(1).views / mostViews))-(83, 650 - 550 * (timestamps(1).views / mostViews))
-FOR chartMaker = 1 TO timestampCounter
+FOR chartMaker = 1 TO timestampCounter 'Plot view lines
   IF chartMaker > 1 THEN
     IF timestamps(chartMaker - 1).date <> timestamps(chartMaker).date - 1 THEN
       LINE -(83 + (1200 * (timestamps(chartMaker).date - 1 - zeroDay) / (finalDay - zeroDay)), 649), _RGB(0, 175, 0)
@@ -112,7 +103,7 @@ FOR chartMaker = 1 TO timestampCounter
 NEXT
 
 LINE (83, 650 - 550 * (timestamps(1).uniques / mostUniques))-(83, 650 - 550 * (timestamps(1).uniques / mostUniques))
-FOR chartMaker = 1 TO timestampCounter
+FOR chartMaker = 1 TO timestampCounter 'Plot unique lines
   IF chartMaker > 1 THEN
     IF timestamps(chartMaker - 1).date <> timestamps(chartMaker).date - 1 THEN
       LINE -(83 + (1200 * (timestamps(chartMaker).date - 1 - zeroDay) / (finalDay - zeroDay)), 649), _RGB(0, 0, 175)
@@ -126,24 +117,21 @@ FOR chartMaker = 1 TO timestampCounter
   END IF
 NEXT
 
-FOR chartMaker = 1 TO timestampCounter
+FOR chartMaker = 1 TO timestampCounter 'Plot points
   CIRCLE (83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).views / mostViews)), 5, _RGB(0, 225, 0)
   PAINT (83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).views / mostViews)), _RGB(0, 225, 0)
-
   CIRCLE (83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).uniques / mostUniques)), 5, _RGB(0, 0, 225)
   PAINT (83 + (1200 * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), 650 - 550 * (timestamps(chartMaker).uniques / mostUniques)), _RGB(0, 0, 225)
 NEXT
-
-DIM chart AS LONG
 _DISPLAY
-_DELAY (1)
-chart = _SCREENIMAGE
+_DELAY (1) 'wait for display to catch up
 saveDir$ = _CWD$ + "\Charts\" + args(1) + "\" + args(2)
-SaveImage chart, saveDir$
+chart& = _SCREENIMAGE 'take screenshot
+SaveImage chart&, saveDir$ 'save screenshot
 
 SYSTEM
 
-FUNCTION extractDateNumber (dateString$)
+FUNCTION extractDateNumber (dateString$) 'IN: String in format YYYY-MM-DD | RETURN: days since zeroYear-zeroMonth-zeroDay
   dayNumber = 0
   zeroYear = 2020
   zeroMonth = 1
@@ -167,7 +155,7 @@ FUNCTION extractDateNumber (dateString$)
   extractDateNumber = dayNumber
 END FUNCTION
 
-FUNCTION monthValue (monthNumber, yearNumber)
+FUNCTION monthValue (monthNumber, yearNumber) 'IN: two numbers | RETURN: amount of days in that month in the given year
   SELECT CASE monthNumber
     CASE 1, 3, 5, 7, 8, 10, 12
       monthValue = 31
@@ -178,12 +166,11 @@ FUNCTION monthValue (monthNumber, yearNumber)
   END SELECT
 END FUNCTION
 
-FUNCTION yearValue (yearNumber)
+FUNCTION yearValue (yearNumber) 'IN: one number | RETURN: amount of days in that year
   IF yearNumber MOD 4 = 0 THEN
     IF yearNumber MOD 100 = 0 THEN
       IF yearNumber MOD 400 = 0 THEN
         yearValue = 366
-        RETURN
       ELSE
         yearValue = 365
       END IF
@@ -196,8 +183,7 @@ FUNCTION yearValue (yearNumber)
 END FUNCTION
 
 REM not my own work, but it works credit qb64.org/wiki/SVAEIMAGE
-
-SUB SaveImage (image AS LONG, filename AS STRING)
+SUB SaveImage (image AS LONG, filename AS STRING) 'Yes, it does HAVE to save it as a .bmp, and if it is too much trouble, one can save the bmp as jpg afterwards.
   bytesperpixel& = _PIXELSIZE(image&)
   IF bytesperpixel& = 0 THEN PRINT "Text modes unsupported!": END
   IF bytesperpixel& = 1 THEN bpp& = 8 ELSE bpp& = 24
