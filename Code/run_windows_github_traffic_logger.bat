@@ -1,5 +1,6 @@
 if "%1"=="" set /p user=Enter username:
 if "%2"=="" set /p password=Enter password:
+if "%1"=="" set /p generateCharts=Would you like to create charts as well? (Y/N):
 
 set outputFile=latest.log
 set archiveFolder=logs
@@ -19,6 +20,7 @@ CALL :AffirmFolders>>%outputFile%
 CALL :CompileJavaFiles>>%outputFile%
 CALL :GetAndParseRepos %user%>>%outputFile%
 CALL :GetAndSaveAllRepoData %user%, %password%>>%outputFile%
+if "%1"=="" if "%generateCharts%"=="Y" CALL :CreateCharts >>%outputFile%
 CALL :ArchiveLastLog %outputFile%, %archiveFolder%
 
 EXIT /B %ERRORLEVEL% 
@@ -43,6 +45,8 @@ Pushd %directory%
 EXIT /B 0
 
 :AffirmFolders
+if not exist "Charts\Clones" mkdir Charts\Clones
+if not exist "Charts\Views" mkdir Charts\Views
 if not exist "logs" mkdir logs
 if not exist "out" mkdir out
 if not exist "ParsedData" mkdir ParsedData
@@ -83,4 +87,11 @@ EXIT /B 0
 :GetAndSaveRepoClones 
 curl "https://api.github.com/repos/%~2/%~1/traffic/clones" -u %~2:%~3>%cd%\%~1.txt
 java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %~1 Clones %cd%\
+EXIT /B 0
+
+:CreateCharts
+for /f "delims=" %%x in (Repos.txt) do (
+ChartMaker Views %%x
+ChartMaker Clones %%x
+)
 EXIT /B 0

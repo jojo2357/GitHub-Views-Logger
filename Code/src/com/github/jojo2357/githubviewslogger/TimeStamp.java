@@ -5,26 +5,28 @@ package com.github.jojo2357.githubviewslogger;
  */
 public class TimeStamp implements Comparable<TimeStamp> {
     private String timeStamp;// the un-parsed timestamp. not used for anything but debugging
-    private final int year;
-    private final int month;
-    private final int day;
+    private int year;
+    private int month;
+    private int day;
     private String views;
     private String uniques;
 
     private TimeStamp(String timeStamp) {
-        String[] holder = timeStamp.split(":");
-        if (holder.length > 1) {
-            timeStamp = holder[1];
-            holder = timeStamp.split("T");
-            timeStamp = holder[0];
-            holder = timeStamp.split("\"");
-            timeStamp = holder[1];
-            this.timeStamp = timeStamp;
-        }
-        holder = timeStamp.split("-");
-        year = Integer.parseInt(holder[0]);
-        month = Integer.parseInt(holder[1]);
-        day = Integer.parseInt(holder[2]);
+	if (timeStamp.contains(":")){
+            String[] holder = timeStamp.split(":");
+            if (holder.length > 1) {
+                timeStamp = holder[1];
+                holder = timeStamp.split("T");
+                timeStamp = holder[0];
+                holder = timeStamp.split("\"");
+                timeStamp = holder[1];
+                this.timeStamp = timeStamp;
+            }
+            holder = timeStamp.split("-");
+            year = Integer.parseInt(holder[0]);
+            month = Integer.parseInt(holder[1]);
+            day = Integer.parseInt(holder[2]);
+	}
     }
 
     /*
@@ -32,6 +34,12 @@ public class TimeStamp implements Comparable<TimeStamp> {
     */
     public TimeStamp(String timeStamp, String views, String uniques) {
         this(timeStamp);
+	if (!timeStamp.contains(":")){
+            String[] holder = timeStamp.split("-");
+            year = Integer.parseInt(holder[0]);
+            month = Integer.parseInt(holder[1]);
+            day = Integer.parseInt(holder[2]);
+	}
         this.views = views;
         this.uniques = uniques;
     }

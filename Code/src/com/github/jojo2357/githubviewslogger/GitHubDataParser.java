@@ -38,7 +38,6 @@ public class GitHubDataParser {
                 //noinspection ResultOfMethodCallIgnored
                 outputFile.createNewFile();
                 outputWriter = new FileWriter(outputFile);
-                outputWriter.write("Date, Total, Unique\n");
             } catch (IOException exception) {
                 inputReader.close();
                 exception.printStackTrace();
