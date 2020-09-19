@@ -23,9 +23,10 @@ args(2) = LTRIM$(RTRIM$(RIGHT$(commandUsed$, LEN(commandUsed$) - LEN(args(1)))))
 OPEN _CWD$ + "\ParsedData\" + args(1) + "\" + args(2) + ".csv" FOR INPUT AS #1 'Raw data file
 LINE INPUT #1, ignoreFirstRead$
 IF EOF(1) THEN SYSTEM 'quits if there is only one line
-handle& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 256)   'We want to do this asap, and this is asap
-SCREEN handle& 'creates the screen and moves it to top left corner of the desktop so that a screenshot can be taken
-_SCREENMOVE 0, 0
+handle& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 256) 'We want to do this asap, and this is asap
+SCREEN 13 'creates the screen and moves it to top left corner of the desktop so that a screenshot can be taken
+'$SCREENHIDE
+_DEST handle&
 DO
   lines = lines + 1 'counts the lines
   LINE INPUT #1, ignoreFirstRead$
@@ -120,12 +121,9 @@ FOR chartMaker = 1 TO timestampCounter 'Plot points
   CIRCLE (83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).uniques / mostUniques)), 5, _RGB(0, 0, 225)
   PAINT (83 + ((_WIDTH - 166) * (timestamps(chartMaker).date - zeroDay) / (finalDay - zeroDay)), _HEIGHT - 200 - (_HEIGHT - 300) * (timestamps(chartMaker).uniques / mostUniques)), _RGB(0, 0, 225)
 NEXT
-'_DISPLAY
-'_DELAY (1) 'wait for display to catch up
-WAIT &H3DA, 8
+
 saveDir$ = _CWD$ + "\Charts\" + args(1) + "\" + args(2)
-chart& = _SCREENIMAGE 'take screenshot
-SaveImage chart&, saveDir$ 'save screenshot
+SaveImage handle&, saveDir$ 'save screenshot
 
 SYSTEM
 
