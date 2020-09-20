@@ -71,7 +71,7 @@ public class GitHubDataParser {
         }
         Collections.sort(timestamps);// sort timestamps long ago -> now
 	for (int foundIterator = alreadyFoundTimestamps.size() - 1; foundIterator >= 0; foundIterator--){
-	    if (alreadyFoundTimestamps.get(foundIterator).compareTo(timestamps.get(0)) < 0){//if the timestap that we pulled from the file is from before the oldest new timestamp, we must add it to the list for reprinting
+	    if (timestamps.size() > 0 && alreadyFoundTimestamps.get(foundIterator).compareTo(timestamps.get(0)) < 0){//if the timestap that we pulled from the file is from before the oldest new timestamp, we must add it to the list for reprinting
 		timestamps.add(alreadyFoundTimestamps.get(foundIterator));
 	    }
 	}
