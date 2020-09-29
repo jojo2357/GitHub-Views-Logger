@@ -21,6 +21,9 @@ public class GitHubDataParser {
         ArrayList<TimeStamp> timestamps = new ArrayList<>();
         ArrayList<TimeStamp> alreadyFoundTimestamps = new ArrayList<>();
 
+	int totalViews = 0;
+	int totalUniques = 0;
+
         final String userDirectory = args[2];
         File inputFile = new File(userDirectory + args[0] + ".txt");
         File outputFile = new File(userDirectory + "ParsedData/" + args[1] + "/" + args[0] + ".csv");
@@ -51,13 +54,15 @@ public class GitHubDataParser {
             } catch (FileNotFoundException exception) {
                 throw new RuntimeException("Error reading from stored data");
             }
-            String nextLine = filePreserver.nextLine(); 
-            // we need to ignore the first line since no matter what it will be "Date, Total, Unique"
-            while (filePreserver.hasNextLine()) {
-                nextLine = filePreserver.nextLine();
-                String[] holder = nextLine.split(",");
-		alreadyFoundTimestamps.add(new TimeStamp(holder[0], holder[1], holder[2]));
-            }
+	    if (filePreserver.hasNextLine()){
+                String nextLine = filePreserver.nextLine(); 
+                // we need to ignore the first line since no matter what it will be "Date, Total, Unique"
+                while (filePreserver.hasNextLine()) {
+                    nextLine = filePreserver.nextLine();
+                    String[] holder = nextLine.split(",");
+		    alreadyFoundTimestamps.add(new TimeStamp(holder[0], holder[1], holder[2]));
+                }
+	    }
             filePreserver.close();
         }
         while (inputReader.hasNextLine()) {// read every line that we got FROM GITHUB API (Effectively parsing it)
@@ -81,6 +86,8 @@ public class GitHubDataParser {
                 outputWriter = new FileWriter(outputFile);
             outputWriter.append("Date, Total, Unique\n");
             for (TimeStamp ts : timestamps) {
+		totalViews += ts.getViews();
+		totalUniques += ts.getUniques();
                 outputWriter.append(ts.toString()).append("\n");
             }
         } catch (IOException exception) {
@@ -93,6 +100,11 @@ public class GitHubDataParser {
         }
         inputReader.close();
         inputFile.delete();
+	try{
+	    TotalManager.append(args[0], args[1], totalViews, totalUniques);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     /**

@@ -29,6 +29,14 @@ public class TimeStamp implements Comparable<TimeStamp> {
 	}
     }
 
+    public int getViews(){
+	return Integer.parseInt(this.views.trim());
+    }
+
+    public int getUniques(){
+	return Integer.parseInt(this.uniques.trim());
+    }
+
     /*
     * @param String containing the time stamp, views/clones, unique viewers
     */

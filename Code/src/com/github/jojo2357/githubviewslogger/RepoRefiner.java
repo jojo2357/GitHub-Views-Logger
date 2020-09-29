@@ -13,6 +13,11 @@ public class RepoRefiner {
      * @param args the program args that are passed in (not used)
      */
     public static void main(String[] args) {
+	try{
+	    TotalManager.clearAndPrepare();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
         try {
             final String userDirectory = System.getProperty("user.dir") + "/";
             File mainFile = new File(userDirectory + "Repos.txt");
