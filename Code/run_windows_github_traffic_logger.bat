@@ -77,7 +77,6 @@ for /f "delims=" %%x in (Repos.txt) do (
 CALL :GetAndSaveRepoViews %%x, %~1, %~2
 CALL :GetAndSaveRepoClones %%x, %~1, %~2
 )
-java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.TotalManager
 EXIT /B 0
 
 :GetAndSaveRepoViews 

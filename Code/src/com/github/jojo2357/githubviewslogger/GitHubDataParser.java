@@ -55,7 +55,8 @@ public class GitHubDataParser {
                 throw new RuntimeException("Error reading from stored data");
             }
 	    if (filePreserver.hasNextLine()){
-                String nextLine = filePreserver.nextLine(); 
+		//Yes, while loop checks before running but we need to check twice because errors do happen and that leads to {.csv
+                String nextLine = filePreserver.nextLine();
                 // we need to ignore the first line since no matter what it will be "Date, Total, Unique"
                 while (filePreserver.hasNextLine()) {
                     nextLine = filePreserver.nextLine();
@@ -80,6 +81,7 @@ public class GitHubDataParser {
 		timestamps.add(alreadyFoundTimestamps.get(foundIterator));
 	    }
 	}
+	//look at the timestamps class, we sort chronologically ascending
 	Collections.sort(timestamps);
         try {
             if (outputWriter == null)

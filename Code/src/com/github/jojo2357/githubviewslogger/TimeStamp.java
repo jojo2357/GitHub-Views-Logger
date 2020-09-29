@@ -2,6 +2,7 @@ package com.github.jojo2357.githubviewslogger;
 
 /**
  * a timestamp object which has day, month, and year fields
+ * sorts in chronological order with oldest date going first
  */
 public class TimeStamp implements Comparable<TimeStamp> {
     private String timeStamp;// the un-parsed timestamp. not used for anything but debugging
@@ -11,6 +12,12 @@ public class TimeStamp implements Comparable<TimeStamp> {
     private String views;
     private String uniques;
 
+    /*
+	timeStamp is the raw github data (signified by ':' in the data) passing in raw data
+	from ParsedData csv's will not result in an error because nothing will happen
+
+	@param: raw github data 
+    */
     private TimeStamp(String timeStamp) {
 	if (timeStamp.contains(":")){
             String[] holder = timeStamp.split(":");
@@ -38,11 +45,11 @@ public class TimeStamp implements Comparable<TimeStamp> {
     }
 
     /*
-    * @param String containing the time stamp, views/clones, unique viewers
+    * @param String containing the time stamp raw data, views/clones, unique viewers
     */
     public TimeStamp(String timeStamp, String views, String uniques) {
         this(timeStamp);
-	if (!timeStamp.contains(":")){
+	if (!timeStamp.contains(":")){// only run this if the other constructor did not
             this.timeStamp = timeStamp;
             String[] holder = timeStamp.split("-");
             year = Integer.parseInt(holder[0]);
@@ -53,6 +60,7 @@ public class TimeStamp implements Comparable<TimeStamp> {
         this.uniques = uniques;
     }
 
+    //used in printing a time stamp to ParsedData csv
     @Override
     public String toString() {
         return timeStamp + ", " + views + ", " + uniques;
