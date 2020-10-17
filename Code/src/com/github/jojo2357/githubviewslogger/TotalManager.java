@@ -29,9 +29,9 @@ class TotalManager{
 	public static void append(String repo, String viewsOrClones, int views, int uniques) throws IOException{
 		PrintWriter out;
 		if (viewsOrClones.equals("Views")){ //only difference is which writer to use
-    			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "/ParsedData/viewTotals.csv", true)));
+    			out = new PrintWriter(new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "/ParsedData/viewTotals.csv", true)));
 		}else{
-    			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "/ParsedData/cloneTotals.csv", true)));
+    			out = new PrintWriter(new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "/ParsedData/cloneTotals.csv", true)));
 		}
 		out.println(repo + ": , " + views + ", " + uniques);
 		out.close();

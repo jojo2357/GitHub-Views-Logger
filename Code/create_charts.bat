@@ -24,8 +24,8 @@ Pushd %directory%
 EXIT /B 0 
 
 :RunForKnownRepo
-ChartMaker Views %~1
-ChartMaker Clones %~1
+start "Chart Maker" ChartMaker.exe Views %~1
+start "Chart Maker" ChartMaker.exe Clones %~1
 EXIT /B 0
 
 :GetRepos
