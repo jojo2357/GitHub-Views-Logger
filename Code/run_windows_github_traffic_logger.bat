@@ -1,7 +1,7 @@
 @echo off
 
 if "%1"=="" set /p user=Enter username:
-if "%2"=="" set /p password=Enter password:
+if "%2"=="" set /p password=Enter password or PAT:
 if exist ChartMaker.exe if "%1"=="" set /p generateCharts=Would you like to create charts as well? (Y/N):
 
 set outputFile=latest.log
@@ -18,10 +18,10 @@ if "%1"=="" set /p createTask=Would you like to create a task that runs me every
 
 if "%createTask%"=="Y" SCHTASKS /CREATE /SC WEEKLY /D SUN /TN "GitHub views logger" /TR "%cd%/run_github_traffic_logger.bat %user%, %password%" /ST 20:00
 
-CALL :AffirmFolders>>%outputFile%
-CALL :CompileJavaFiles>>%outputFile%
-CALL :GetAndParseRepos %user%>>%outputFile%
-CALL :GetAndSaveAllRepoData %user%, %password%>>%outputFile%
+CALL :AffirmFolders
+CALL :CompileJavaFiles
+CALL :GetAndParseRepos %user%
+CALL :GetAndSaveAllRepoData %user%, %password%
 if "%1"=="" if "%generateCharts%"=="Y" CALL :CreateCharts >>%outputFile%
 CALL :ArchiveLastLog %outputFile%, %archiveFolder%
 
@@ -57,7 +57,7 @@ if not exist "ParsedData\Clones" mkdir ParsedData\Clones
 EXIT /B 0
 
 :CompileJavaFiles
-javac -d out src\com\github\jojo2357\githubviewslogger\*.java
+javac -d out src\com\github\jojo2357\githubviewslogger\*.java>>%outputFile%
 EXIT /B 0
 
 :GetAndParseRepos
@@ -67,6 +67,7 @@ EXIT /B 0
 
 :GetRepos
 curl "https://api.github.com/users/%~1/repos">%cd%\Repos.txt
+curl "https://api.github.com/users/%~1/repos">>%outputFile%
 EXIT /B 0
 
 :ParseRepos
@@ -83,11 +84,13 @@ EXIT /B 0
 
 :GetAndSaveRepoViews 
 curl "https://api.github.com/repos/%~2/%~1/traffic/views" -u %~2:%~3>%cd%\%~1.txt
+curl "https://api.github.com/repos/%~2/%~1/traffic/views" -u %~2:%~3>>%outputFile%
 java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %~1 Views %cd%\
 EXIT /B 0
 
 :GetAndSaveRepoClones 
 curl "https://api.github.com/repos/%~2/%~1/traffic/clones" -u %~2:%~3>%cd%\%~1.txt
+curl "https://api.github.com/repos/%~2/%~1/traffic/clones" -u %~2:%~3>>%outputFile%
 java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.GitHubDataParser %~1 Clones %cd%\
 EXIT /B 0
 

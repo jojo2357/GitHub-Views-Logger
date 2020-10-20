@@ -14,6 +14,7 @@ build
 ._*
 
 # Secret/confidential
+Code/Pat.txt
 databases
 secrets
 

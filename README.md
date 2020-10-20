@@ -1,14 +1,21 @@
 # Github Views Logger  
 Uses java 8, but other versions may be compatible.
 This is a mix of java and batch scripting that gets pertinent data from a user's repos and stores them. Now uses qb64 to create charts from the data (optional)
-It is set up to get and store a day-by-day count of views and clones that does not simply go away after 24 hours.  
-I'm not a superhero that can retrieve data that is more than 2 weeks old unless it has already been stored by the program, then it merely keeps going from the first time logging started.  
+It is set up to get and store a day-by-day count of views and clones that does not simply go away after 2 weeks.  
+I'm not a superhero that can retrieve data that is more than 2 weeks old unless it has already been stored by the program, then it merely keeps going from the first time logging started. 
+If the data output has every repo with 0 views and clones, check the end of the latest.log and see if you can fix it.
 
 ## Startup Guide:  
 * Install Java 8  
+* Generate a PAT in github with these steps:
+	1. Access your personal GitHub settings by clicking on your user icon, and then click Settings.
+	2. Go to developer settings, then Personal Access Tokens
+	3. Generate a new Token and select repo
+	4. Generate the token and save it somewhere safe.
+	Note: This token can be used in place of a github password
 ### Windows:
 * run `run_windows_github_traffic_logger.bat` the way you would run any executeable
-* type in your username and password when asked
+* type in your username and PAT when asked
 * program will ask if you want to make charts of the data. type Y if you want it to, and N if you do not
 * the program will ask if you want to set up a scheduled task that will run with your username and password every week on sunday at 20:00. type Y if you want that, N if you do not
 * profit  
@@ -35,7 +42,7 @@ if you want to create charts from the data that has built up, all you have to do
 ## Notes:  
 Github will be changing their api to no longer accept username+password.   
 This means you will need to create an API key for this in May 2021.  
-I do not know enough on the matter atm to fix it or anything so I will update this repo when I have more information.  
+I do know enough on the matter atm to fix it! Just stick a PAT in place of .  
 In the meantime, enjoy your data logger!  
 
 along with that, I hope to create a data parser to combine views and clones from all repos into one .csv file, thus making graphs and charts much easier. 
