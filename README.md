@@ -40,6 +40,8 @@ if you choose to run `run_windows_github_traffic_logger.bat` from cmd, you can d
 if you want to create charts from the data that has built up, all you have to do is run `create_charts.bat` and enter your username (enter username just to make sure that Repos.txt is correct)
 
 ## Notes:  
+In order to get language analysis of all of your repos, create a file called `PrivateRepos.txt` and in there, put repos that are private in the same format they appear in `Repos.txt`
+
 Github will be changing their api to no longer accept username+password.   
 This means you will need to create an API key for this in May 2021.  
 I do know enough on the matter atm to fix it! Just stick a PAT in place of .  

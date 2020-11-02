@@ -22,6 +22,7 @@ CALL :AffirmFolders
 CALL :CompileJavaFiles
 CALL :GetAndParseRepos %user%
 CALL :GetAndSaveAllRepoData %user%, %password%
+CALL :GetAndSaveLanguages %user%, %password%
 if "%1"=="" if "%generateCharts%"=="Y" CALL :CreateCharts >>%outputFile%
 CALL :ArchiveLastLog %outputFile%, %archiveFolder%
 
@@ -98,4 +99,14 @@ EXIT /B 0
 for /f "delims=" %%x in (Repos.txt) do (
 create_charts %%x
 )
+EXIT /B 0
+
+:GetAndSaveLanguages
+for /f "delims=" %%x in (Repos.txt) do (
+curl "https://api.github.com/repos/%~1/%%x/languages" -u %~2:%~3>%cd%\%%x_langs.txt
+)
+for /f "delims=" %%x in (PrivateRepos.txt) do (
+curl "https://api.github.com/repos/%~1/%%x/languages" -u %~2:%~3>%cd%\%%x_langs.txt
+)
+java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.LanguageAverager>>%outputFile%
 EXIT /B 0

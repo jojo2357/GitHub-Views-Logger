@@ -4,6 +4,7 @@ out
 *.iws
 *.iml
 .idea
+*.out
 
 # gradle
 build
@@ -23,4 +24,5 @@ Charts
 logs
 *.log
 Repos.txt
+PrivateRepos.txt
 ParsedData/
