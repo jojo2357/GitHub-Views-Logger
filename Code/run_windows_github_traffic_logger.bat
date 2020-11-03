@@ -20,11 +20,13 @@ if "%createTask%"=="Y" SCHTASKS /CREATE /SC WEEKLY /D SUN /TN "GitHub views logg
 
 CALL :AffirmFolders
 CALL :CompileJavaFiles
-CALL :GetAndParseRepos %user%
+CALL :GetAndParseRepos %user%, %password%
 CALL :GetAndSaveAllRepoData %user%, %password%
 CALL :GetAndSaveLanguages %user%, %password%
 if "%1"=="" if "%generateCharts%"=="Y" CALL :CreateCharts >>%outputFile%
 CALL :ArchiveLastLog %outputFile%, %archiveFolder%
+
+pause
 
 EXIT /B %ERRORLEVEL% 
 
@@ -62,13 +64,13 @@ javac -d out src\com\github\jojo2357\githubviewslogger\*.java>>%outputFile%
 EXIT /B 0
 
 :GetAndParseRepos
-CALL :GetRepos %~1
+CALL :GetRepos %~1 %~2
 CALL :ParseRepos
 EXIT /B 0
 
 :GetRepos
-curl "https://api.github.com/users/%~1/repos">%cd%\Repos.txt
-curl "https://api.github.com/users/%~1/repos">>%outputFile%
+curl "https://api.github.com/user/repos" -u %~1:%~2>%cd%\Repos.txt
+curl "https://api.github.com/user/repos" -u %~1:%~2>>%outputFile%
 EXIT /B 0
 
 :ParseRepos
@@ -103,9 +105,6 @@ EXIT /B 0
 
 :GetAndSaveLanguages
 for /f "delims=" %%x in (Repos.txt) do (
-curl "https://api.github.com/repos/%~1/%%x/languages" -u %~2:%~3>%cd%\%%x_langs.txt
-)
-for /f "delims=" %%x in (PrivateRepos.txt) do (
 curl "https://api.github.com/repos/%~1/%%x/languages" -u %~2:%~3>%cd%\%%x_langs.txt
 )
 java -cp %cd%\out\ com.github.jojo2357.githubviewslogger.LanguageAverager>>%outputFile%

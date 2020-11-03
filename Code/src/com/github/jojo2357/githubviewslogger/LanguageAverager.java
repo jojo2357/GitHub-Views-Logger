@@ -12,18 +12,17 @@ public class LanguageAverager {
         char[] raw = new char[10000];
         mainReader.read(raw);
         String repos = new String(raw).trim();
-        File secondFile = new File(userDirectory + "PrivateRepos.txt");
-        FileReader secondReader = new FileReader(secondFile);
-        raw = new char[10000];
-        secondReader.read(raw);
-        repos += "\n" + ((new String(raw)).trim().replace("\r", ""));
         System.out.println(repos);
         for (String repo : repos.split("\n")) {
+	    if (repo.equals(""))
+		continue;
             FileReader reader = new FileReader(new File(userDirectory + repo + "_langs.txt"));
             raw = new char[10000];
             reader.read(raw);
             String rawData = new String(raw).trim();
             for (String str : rawData.split("[\n]")) {
+		if (str.contains("Not Found"))
+			break;
                 if (str.contains(":"))
                     if (languageCounts.containsKey(str.split("[\"]")[1])) {
                         languageCounts.put(str.split("[\"]")[1], languageCounts.get(str.split("[\"]")[1]) + Integer.parseInt(str.split("[:]")[1].substring(1, str.split("[:]")[1].contains(",") ? str.split("[:]")[1].length() - 1 : str.split("[:]")[1].length())));
